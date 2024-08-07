@@ -2,7 +2,6 @@ package com.example.amphibiansappretrofitdata.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.amphibiansappretrofitdata.data.model.AmphibiansItem
 import com.example.amphibiansappretrofitdata.data.uistate.AmphibiansResponse
 import com.example.amphibiansappretrofitdata.data.uistate.AmphibiansUiState
 import com.example.amphibiansappretrofitdata.domain.usecase.GetAmphibiansUseCase
