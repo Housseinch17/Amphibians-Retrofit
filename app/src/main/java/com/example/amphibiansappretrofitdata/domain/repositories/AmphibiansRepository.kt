@@ -4,4 +4,5 @@ import com.example.amphibiansappretrofitdata.data.model.AmphibiansItem
 
 interface AmphibiansRepository {
     suspend fun getAmphibians(): List<AmphibiansItem>
+    suspend fun updateAmphibians(): List<AmphibiansItem>
 }

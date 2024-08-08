@@ -91,8 +91,8 @@ fun AmphibianList(modifier: Modifier, amphibianList: List<AmphibiansItem>) {
         verticalArrangement = Arrangement.spacedBy(20.dp),
         contentPadding = PaddingValues(bottom = 20.dp)
     ) {
-        items(amphibianList) { amphian ->
-            AmphibianItem(modifier = Modifier.fillMaxWidth(), amphibiansItem = amphian)
+        items(amphibianList) { amphibian ->
+            AmphibianItem(modifier = Modifier.fillMaxWidth(), amphibiansItem = amphibian)
         }
     }
 }
@@ -135,6 +135,7 @@ fun AmphibiansImage(modifier: Modifier, imageSrc: String) {
         model = ImageRequest.Builder(LocalContext.current)
             .data(imageSrc)
             .crossfade(true)
+            .error(R.drawable.connectionerror)
             .build(),
         contentDescription = null,
         contentScale = ContentScale.Crop,
