@@ -31,7 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.amphibiansappretrofitdata.R
 import com.example.amphibiansappretrofitdata.data.model.AmphibiansItem
-import com.example.amphibiansappretrofitdata.data.uistate.AmphibiansResponse
+import com.example.amphibiansappretrofitdata.ui.viewmodels.AmphibiansResponse
 
 
 @Composable
@@ -41,7 +41,6 @@ fun AmphibianScreen(modifier: Modifier, amphibiansResponse: AmphibiansResponse) 
             modifier = modifier,
             amphibianList = amphibiansResponse.list
         )
-
         is AmphibiansResponse.Error -> ErrorScreen(modifier = modifier)
         is AmphibiansResponse.Loading -> LoadingScreen(modifier = modifier)
     }

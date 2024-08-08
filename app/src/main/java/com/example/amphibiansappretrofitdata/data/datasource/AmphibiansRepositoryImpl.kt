@@ -5,6 +5,7 @@ import com.example.amphibiansappretrofitdata.data.datasource.impl.LocalAmphibian
 import com.example.amphibiansappretrofitdata.data.datasource.impl.NetworkAmphibiansImpl
 import com.example.amphibiansappretrofitdata.data.model.AmphibiansItem
 import com.example.amphibiansappretrofitdata.domain.repositories.AmphibiansRepository
+import retrofit2.HttpException
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -24,33 +25,30 @@ class AmphibiansRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getAmphibiansFromApi(): List<AmphibiansItem> {
+        var amphibiansList = emptyList<AmphibiansItem>()
         try {
-            val amphibiansList = networkAmphibiansImpl.getAmphibians()
-            return amphibiansList
+            amphibiansList = networkAmphibiansImpl.getAmphibians()
         } catch (exception: Exception) {
             Log.i("MyTag", "getAmphibiansFromApi() exception: "+exception.message.toString())
-            return emptyList()
+        }catch (e: HttpException) {
+            Log.i("MyTag", "getAmphibiansFromApi() exception: "+e.message.toString())
         }
+        return amphibiansList
     }
 
     private suspend fun getAmphibiansFromDb(): List<AmphibiansItem> {
-        lateinit var amphibiansList: List<AmphibiansItem>
+        var amphibiansList = emptyList<AmphibiansItem>()
         try {
             amphibiansList = localAmphibiansImpl.getAmphibians()
         } catch (exception: Exception) {
             Log.i("MyTag", "getAmphibiansFromDb() exception: "+exception.message.toString())
+        }catch (e: HttpException) {
+            Log.i("MyTag", "getAmphibiansFromDb() exception: "+e.message.toString())
         }
-        if (amphibiansList.isNotEmpty()) {
-            return amphibiansList
-        } else {
+        if (amphibiansList.isEmpty()) {
             amphibiansList = getAmphibiansFromApi()
             localAmphibiansImpl.saveAmphibians(amphibiansList)
         }
         return amphibiansList
     }
-}
-
-sealed interface NetworkCall {
-    data class Success(val amphibiansList: List<AmphibiansItem>) : NetworkCall
-    data object Error : NetworkCall
 }
