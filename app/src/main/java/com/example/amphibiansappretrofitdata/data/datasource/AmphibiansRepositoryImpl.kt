@@ -13,6 +13,7 @@ class AmphibiansRepositoryImpl @Inject constructor(
     private val networkAmphibiansImpl: NetworkAmphibiansImpl,
     private val localAmphibiansImpl: LocalAmphibiansImpl
 ) : AmphibiansRepository {
+
     override suspend fun getAmphibians(): List<AmphibiansItem> {
         return getAmphibiansFromDb()
     }
@@ -24,14 +25,26 @@ class AmphibiansRepositoryImpl @Inject constructor(
         return amphibiansList
     }
 
+    override suspend fun getAmphibiansByName(name: String): AmphibiansItem? {
+        var amphibian: AmphibiansItem? = null
+        try {
+            amphibian = localAmphibiansImpl.getAmphibiansByName(name)
+        } catch (exception: Exception) {
+            Log.i("MyTag", "getAmphibiansByName() exception: " + exception.message.toString())
+        } catch (e: HttpException) {
+            Log.i("MyTag", "getAmphibiansByName() exception: " + e.message.toString())
+        }
+        return amphibian
+    }
+
     private suspend fun getAmphibiansFromApi(): List<AmphibiansItem> {
         var amphibiansList = emptyList<AmphibiansItem>()
         try {
             amphibiansList = networkAmphibiansImpl.getAmphibians()
         } catch (exception: Exception) {
-            Log.i("MyTag", "getAmphibiansFromApi() exception: "+exception.message.toString())
-        }catch (e: HttpException) {
-            Log.i("MyTag", "getAmphibiansFromApi() exception: "+e.message.toString())
+            Log.i("MyTag", "getAmphibiansFromApi() exception: " + exception.message.toString())
+        } catch (e: HttpException) {
+            Log.i("MyTag", "getAmphibiansFromApi() exception: " + e.message.toString())
         }
         return amphibiansList
     }
@@ -41,9 +54,9 @@ class AmphibiansRepositoryImpl @Inject constructor(
         try {
             amphibiansList = localAmphibiansImpl.getAmphibians()
         } catch (exception: Exception) {
-            Log.i("MyTag", "getAmphibiansFromDb() exception: "+exception.message.toString())
-        }catch (e: HttpException) {
-            Log.i("MyTag", "getAmphibiansFromDb() exception: "+e.message.toString())
+            Log.i("MyTag", "getAmphibiansFromDb() exception: " + exception.message.toString())
+        } catch (e: HttpException) {
+            Log.i("MyTag", "getAmphibiansFromDb() exception: " + e.message.toString())
         }
         if (amphibiansList.isEmpty()) {
             amphibiansList = getAmphibiansFromApi()

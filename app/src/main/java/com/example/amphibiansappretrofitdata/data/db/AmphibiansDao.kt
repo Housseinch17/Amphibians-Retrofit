@@ -16,4 +16,7 @@ interface AmphibiansDao {
 
     @Query("SELECT * FROM amphibians_item")
     suspend fun getAmphibians(): List<AmphibiansItem>
+
+    @Query("SELECT * FROM amphibians_item WHERE name = :name LIMIT 1")
+    suspend fun getAmphibianByName(name: String?): AmphibiansItem?
 }

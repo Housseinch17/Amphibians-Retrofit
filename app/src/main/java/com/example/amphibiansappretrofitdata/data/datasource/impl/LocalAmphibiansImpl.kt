@@ -19,4 +19,8 @@ class LocalAmphibiansImpl @Inject constructor(
     override suspend fun deleteAllAmphibians() {
         return amphibiansDao.deleteAllAmphibians()
     }
+
+    override suspend fun getAmphibiansByName(name: String): AmphibiansItem? {
+        return amphibiansDao.getAmphibianByName(name)
+    }
 }

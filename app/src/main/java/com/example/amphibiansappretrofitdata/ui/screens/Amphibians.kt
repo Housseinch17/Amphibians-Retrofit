@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,20 +36,31 @@ import com.example.amphibiansappretrofitdata.ui.viewmodels.AmphibiansResponse
 
 
 @Composable
-fun AmphibianScreen(modifier: Modifier, amphibiansResponse: AmphibiansResponse) {
+fun AmphibianScreen(
+    modifier: Modifier,
+    amphibiansResponse: AmphibiansResponse,
+    onClick: (String) -> Unit
+) {
     when (amphibiansResponse) {
         is AmphibiansResponse.Success -> ResultsScreen(
             modifier = modifier,
             amphibianList = amphibiansResponse.list
-        )
+        ) { name ->
+            onClick(name)
+        }
+
         is AmphibiansResponse.Error -> ErrorScreen(modifier = modifier)
         is AmphibiansResponse.Loading -> LoadingScreen(modifier = modifier)
     }
 }
 
 @Composable
-fun ResultsScreen(modifier: Modifier, amphibianList: List<AmphibiansItem>) {
-    AmphibianList(modifier = modifier.padding(horizontal = 20.dp), amphibianList)
+fun ResultsScreen(
+    modifier: Modifier,
+    amphibianList: List<AmphibiansItem>,
+    onClick: (String) -> Unit
+) {
+    AmphibianList(modifier = modifier, amphibianList, onClick)
 }
 
 @Composable
@@ -84,20 +96,32 @@ fun ErrorScreen(modifier: Modifier) {
 }
 
 @Composable
-fun AmphibianList(modifier: Modifier, amphibianList: List<AmphibiansItem>) {
+fun AmphibianList(
+    modifier: Modifier,
+    amphibianList: List<AmphibiansItem>,
+    onClick: (String) -> Unit
+) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(20.dp),
         contentPadding = PaddingValues(bottom = 20.dp)
     ) {
         items(amphibianList) { amphibian ->
-            AmphibianItem(modifier = Modifier.fillMaxWidth(), amphibiansItem = amphibian)
+            AmphibianItem(
+                modifier = Modifier.fillMaxWidth(), amphibiansItem = amphibian
+            ) { name ->
+                onClick(name)
+            }
         }
     }
 }
 
 @Composable
-fun AmphibianItem(modifier: Modifier, amphibiansItem: AmphibiansItem) {
+fun AmphibianItem(
+    modifier: Modifier,
+    amphibiansItem: AmphibiansItem,
+    onClick: (String) -> Unit
+) {
     Column(
         modifier = modifier
             .border(
@@ -106,6 +130,9 @@ fun AmphibianItem(modifier: Modifier, amphibiansItem: AmphibiansItem) {
             )
             .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
             .background(Color.LightGray)
+            .clickable {
+                onClick(amphibiansItem.name)
+            }
     ) {
         Text(
             text = amphibiansItem.name + " (${amphibiansItem.type})",

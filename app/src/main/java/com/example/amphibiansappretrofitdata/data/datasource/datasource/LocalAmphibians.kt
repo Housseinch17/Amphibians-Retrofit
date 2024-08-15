@@ -6,4 +6,5 @@ interface LocalAmphibians {
     suspend fun saveAmphibians(amphibians: List<AmphibiansItem>)
     suspend fun getAmphibians(): List<AmphibiansItem>
     suspend fun deleteAllAmphibians()
+    suspend fun getAmphibiansByName(name: String): AmphibiansItem?
 }

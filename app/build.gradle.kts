@@ -97,6 +97,8 @@ dependencies {
     kapt (libs.androidx.room.compiler)
     implementation (libs.androidx.room.ktx)
 
+    //NavHost()
+    implementation(libs.androidx.navigation.compose)
 
 }
 // Allow references to generated code

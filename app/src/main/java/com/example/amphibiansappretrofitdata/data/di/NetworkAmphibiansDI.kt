@@ -1,6 +1,5 @@
 package com.example.amphibiansappretrofitdata.data.di
 
-import android.net.Network
 import com.example.amphibiansappretrofitdata.data.api.AmphibiansApiService
 import com.example.amphibiansappretrofitdata.data.datasource.datasource.NetworkAmphibians
 import com.example.amphibiansappretrofitdata.data.datasource.impl.NetworkAmphibiansImpl

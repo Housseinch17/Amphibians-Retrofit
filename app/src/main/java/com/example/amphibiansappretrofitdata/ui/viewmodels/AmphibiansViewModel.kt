@@ -47,10 +47,9 @@ class AmphibiansViewModel @Inject constructor(
 
     private suspend fun fetchAmphibians(fetch: suspend () -> List<AmphibiansItem>): AmphibiansResponse {
         val amphibiansList = fetch()
-       val amphibiansResponse = if(amphibiansList.isNotEmpty()){
+        val amphibiansResponse = if (amphibiansList.isNotEmpty()) {
             AmphibiansResponse.Success(amphibiansList)
-        }
-        else{
+        } else {
             AmphibiansResponse.Error
         }
         return amphibiansResponse
