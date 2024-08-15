@@ -51,7 +51,8 @@ class MainActivity : ComponentActivity() {
                 val backStackEntry by navHostController.currentBackStackEntryAsState()
 
                 // Retrieve the current route from the back stack entry, or default to the Amphibians screen if null
-                val route = backStackEntry?.destination?.route ?: DataSource.AmphibianScreen.Amphibians.name
+                val route =
+                    backStackEntry?.destination?.route ?: DataSource.AmphibianScreen.Amphibians.name
 
                 // Determine the current screen based on the route
                 val currentScreen = when {
@@ -110,14 +111,15 @@ fun AppBar(
     updateFunction: () -> Unit,
     navigateBack: () -> Unit
 ) {
-    TopAppBar(title = {
-        Text(
-            text = stringResource(id = amphibianScreen.title),
-            modifier = Modifier.fillMaxWidth(1f),
-            textAlign = TextAlign.Center,
-            style = itemTitle.copy(fontSize = 24.sp),
-        )
-    },
+    TopAppBar(
+        title = {
+            Text(
+                text = stringResource(id = amphibianScreen.title),
+                modifier = Modifier.fillMaxWidth(1f),
+                textAlign = TextAlign.Center,
+                style = itemTitle.copy(fontSize = 24.sp),
+            )
+        },
         navigationIcon = {
             if (canNavigateBack) {
                 IconButton(
@@ -135,9 +137,14 @@ fun AppBar(
         actions = {
             if (canUpdate) {
                 IconButton(onClick = updateFunction) {
-                    Icon(imageVector = Icons.Default.AddCircle, contentDescription = "Update")
+                    Icon(
+                        imageVector = Icons.Default.AddCircle, contentDescription = stringResource(
+                            id = R.string.update
+                        )
+                    )
                 }
             }
         },
-        modifier = modifier)
+        modifier = modifier
+    )
 }
