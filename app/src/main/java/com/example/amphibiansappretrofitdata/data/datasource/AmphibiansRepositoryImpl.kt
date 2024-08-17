@@ -55,8 +55,6 @@ class AmphibiansRepositoryImpl @Inject constructor(
             amphibiansList = localAmphibiansImpl.getAmphibians()
         } catch (exception: Exception) {
             Log.i("MyTag", "getAmphibiansFromDb() exception: " + exception.message.toString())
-        } catch (e: HttpException) {
-            Log.i("MyTag", "getAmphibiansFromDb() exception: " + e.message.toString())
         }
         if (amphibiansList.isEmpty()) {
             amphibiansList = getAmphibiansFromApi()
