@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -30,17 +31,15 @@ import kotlinx.coroutines.launch
 fun Navigation(
     modifier: Modifier,
     navHostController: NavHostController,
-    amphibiansViewModel: AmphibiansViewModel,
-    amphibianDetailViewModel: AmphibianDetailViewModel
 ) {
-    val amphibianUiState by amphibiansViewModel.amphibians.collectAsStateWithLifecycle()
-    val amphibianDetailUiState by amphibianDetailViewModel.amphibianDetail.collectAsStateWithLifecycle()
 
     NavHost(
         navController = navHostController,
         startDestination = DataSource.AmphibianScreen.Amphibians.name
     ) {
         composable(route = DataSource.AmphibianScreen.Amphibians.name) {
+            val amphibiansViewModel: AmphibiansViewModel = hiltViewModel()
+            val amphibianUiState by amphibiansViewModel.amphibians.collectAsStateWithLifecycle()
             AmphibianScreen(
                 modifier = modifier.padding(horizontal = 20.dp),
                 amphibiansResponse = amphibianUiState.amphibiansResponse
@@ -53,6 +52,8 @@ fun Navigation(
             arguments = listOf(navArgument("name") { type = NavType.StringType })
         )
         { backStackEntry ->
+            val amphibianDetailViewModel: AmphibianDetailViewModel = hiltViewModel()
+            val amphibianDetailUiState by amphibianDetailViewModel.amphibianDetail.collectAsStateWithLifecycle()
             val scope = rememberCoroutineScope()
             val name = backStackEntry.arguments?.getString("name")
             scope.launch {
@@ -62,17 +63,22 @@ fun Navigation(
             }
             amphibianDetailUiState.amphibiansItem?.let {
                 AmphibianDetail(
-                    modifier = modifier.wrapContentHeight().padding(horizontal = 20.dp),
+                    modifier = modifier
+                        .wrapContentHeight()
+                        .padding(horizontal = 20.dp),
                     amphibiansItem = it
                 )
             } ?: Text(
                 text = "No Amphibian is found",
-                modifier = Modifier.fillMaxSize().padding(bottom = 20.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 20.dp),
                 style = itemTitle
             )
         }
     }
 }
+
 fun NavHostController.navigateSingleTopTo(route: String) =
     this.navigate(route) {
         // Pop up to the start destination of the graph to

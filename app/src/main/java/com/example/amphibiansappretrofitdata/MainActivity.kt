@@ -43,8 +43,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             AmphibiansAppRetrofitDataTheme {
                 val amphibiansViewModel: AmphibiansViewModel = hiltViewModel()
-                val amphibianDetailViewModel: AmphibianDetailViewModel = hiltViewModel()
-
 
                 val navHostController = rememberNavController()
                 // Get current back stack entry
@@ -91,8 +89,6 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerPadding),
                         navHostController = navHostController,
-                        amphibiansViewModel = amphibiansViewModel,
-                        amphibianDetailViewModel = amphibianDetailViewModel
                     )
                 }
             }

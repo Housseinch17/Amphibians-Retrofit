@@ -1,5 +1,6 @@
 package com.example.amphibiansappretrofitdata.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.amphibiansappretrofitdata.data.uistate.AmphibianDetailUiState
@@ -19,6 +20,14 @@ class AmphibianDetailViewModel @Inject constructor(
     val amphibianDetail = _amphibianDetail.asStateFlow()
 
 
+    init {
+        Log.d("MyTag","Details started")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("MyTag","Details cleared")
+    }
     suspend fun getAmphibiansByName(name: String) {
         viewModelScope.launch {
             _amphibianDetail.update {

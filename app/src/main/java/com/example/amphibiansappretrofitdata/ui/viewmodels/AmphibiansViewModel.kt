@@ -1,5 +1,6 @@
 package com.example.amphibiansappretrofitdata.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.amphibiansappretrofitdata.data.model.AmphibiansItem
@@ -22,7 +23,13 @@ class AmphibiansViewModel @Inject constructor(
     val amphibians = _amphibians.asStateFlow()
 
     init {
+        Log.d("MyTag","Amphibians started")
         getAmphibians()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("MyTag","Amphibians cleared")
     }
 
     fun updateAmphibians() {
