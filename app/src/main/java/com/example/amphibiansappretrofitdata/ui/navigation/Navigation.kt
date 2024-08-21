@@ -11,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -44,7 +45,7 @@ fun Navigation(
                 modifier = modifier.padding(horizontal = 20.dp),
                 amphibiansResponse = amphibianUiState.amphibiansResponse
             ) { name ->
-                navHostController.navigate(DataSource.AmphibianScreen.AmphibianDetail.name + "/$name")
+                navHostController.navigateSingleTopTo(DataSource.AmphibianScreen.AmphibianDetail.name + "/$name")
             }
         }
         composable(
@@ -72,3 +73,19 @@ fun Navigation(
         }
     }
 }
+fun NavHostController.navigateSingleTopTo(route: String) =
+    this.navigate(route) {
+        // Pop up to the start destination of the graph to
+        // avoid building up a large stack of destinations
+        // on the back stack as users select items
+        popUpTo(
+            this@navigateSingleTopTo.graph.findStartDestination().id
+        ) {
+            saveState = true
+        }
+        // Avoid multiple copies of the same destination when
+        // reelecting the same item
+        launchSingleTop = true
+        // Restore state when reelecting a previously selected item
+        restoreState = true
+    }
