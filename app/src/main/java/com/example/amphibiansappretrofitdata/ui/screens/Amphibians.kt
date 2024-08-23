@@ -48,7 +48,6 @@ fun AmphibianScreen(
         ) { name ->
             onClick(name)
         }
-
         is AmphibiansResponse.Error -> ErrorScreen(modifier = modifier)
         is AmphibiansResponse.Loading -> LoadingScreen(modifier = modifier)
     }

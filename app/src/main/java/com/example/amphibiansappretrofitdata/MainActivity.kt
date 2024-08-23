@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,7 +31,6 @@ import com.example.amphibiansappretrofitdata.data.DataSource
 import com.example.amphibiansappretrofitdata.ui.navigation.Navigation
 import com.example.amphibiansappretrofitdata.ui.theme.AmphibiansAppRetrofitDataTheme
 import com.example.amphibiansappretrofitdata.ui.theme.itemTitle
-import com.example.amphibiansappretrofitdata.ui.viewmodels.AmphibianDetailViewModel
 import com.example.amphibiansappretrofitdata.ui.viewmodels.AmphibiansViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,7 +41,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AmphibiansAppRetrofitDataTheme {
-                val amphibiansViewModel: AmphibiansViewModel = hiltViewModel()
 
                 val navHostController = rememberNavController()
                 // Get current back stack entry
@@ -68,27 +66,26 @@ class MainActivity : ComponentActivity() {
                     // Default case: if none of the specific routes match, fall back to the default screen
                     else -> DataSource.AmphibianScreen.Amphibians
                 }
+                val amphibiansViewModel = hiltViewModel<AmphibiansViewModel>()
 
-
-                Scaffold(
-                    topBar = {
-                        AppBar(
-                            modifier = Modifier.fillMaxWidth(),
-                            amphibianScreen = currentScreen,
-                            canNavigateBack = navHostController.previousBackStackEntry != null,
-                            canUpdate = currentScreen == DataSource.AmphibianScreen.Amphibians,
-                            updateFunction = amphibiansViewModel::updateAmphibians
-                        ) {
-                            navHostController.navigateUp()
-                        }
+                Scaffold(topBar = {
+                    AppBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        amphibianScreen = currentScreen,
+                        canNavigateBack = navHostController.previousBackStackEntry != null,
+                        canUpdate = currentScreen == DataSource.AmphibianScreen.Amphibians,
+                        amphibiansViewModel = amphibiansViewModel
+                    ) {
+                        navHostController.navigateUp()
                     }
-                ) { innerPadding ->
+                }) { innerPadding ->
 
                     Navigation(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
                         navHostController = navHostController,
+                        amphibiansViewModel = amphibiansViewModel,
                     )
                 }
             }
@@ -104,43 +101,41 @@ fun AppBar(
     amphibianScreen: DataSource.AmphibianScreen,
     canNavigateBack: Boolean,
     canUpdate: Boolean,
-    updateFunction: () -> Unit,
+    amphibiansViewModel: AmphibiansViewModel,
     navigateBack: () -> Unit
 ) {
-    TopAppBar(
-        title = {
-            Text(
-                text = stringResource(id = amphibianScreen.title),
-                modifier = Modifier.fillMaxWidth(1f),
-                textAlign = TextAlign.Center,
-                style = itemTitle.copy(fontSize = 24.sp),
-            )
-        },
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(
-                    onClick = navigateBack, modifier = Modifier.size(30.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(
-                            id = R.string.back
-                        )
+    TopAppBar(title = {
+        Text(
+            text = stringResource(id = amphibianScreen.title),
+            modifier = Modifier.fillMaxWidth(1f),
+            textAlign = TextAlign.Center,
+            style = itemTitle.copy(fontSize = 24.sp),
+        )
+    }, navigationIcon = {
+        if (canNavigateBack) {
+            IconButton(
+                onClick = navigateBack, modifier = Modifier.size(30.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(
+                        id = R.string.back
                     )
-                }
+                )
             }
-        },
-        actions = {
-            if (canUpdate) {
-                IconButton(onClick = updateFunction) {
-                    Icon(
-                        imageVector = Icons.Default.AddCircle, contentDescription = stringResource(
-                            id = R.string.update
-                        )
+        }
+    }, actions = {
+        if (canUpdate) {
+            IconButton(
+                onClick = amphibiansViewModel::updateAmphibians
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Refresh, contentDescription = stringResource(
+                        id = R.string.update
                     )
-                }
+                )
             }
-        },
-        modifier = modifier
+        }
+    }, modifier = modifier
     )
 }

@@ -1,6 +1,7 @@
 package com.example.amphibiansappretrofitdata.ui.navigation
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -31,18 +32,18 @@ import kotlinx.coroutines.launch
 fun Navigation(
     modifier: Modifier,
     navHostController: NavHostController,
+    amphibiansViewModel: AmphibiansViewModel,
 ) {
-
     NavHost(
         navController = navHostController,
         startDestination = DataSource.AmphibianScreen.Amphibians.name
     ) {
         composable(route = DataSource.AmphibianScreen.Amphibians.name) {
-            val amphibiansViewModel: AmphibiansViewModel = hiltViewModel()
             val amphibianUiState by amphibiansViewModel.amphibians.collectAsStateWithLifecycle()
+            Log.d("MyTag",amphibianUiState.amphibiansResponse.toString())
             AmphibianScreen(
                 modifier = modifier.padding(horizontal = 20.dp),
-                amphibiansResponse = amphibianUiState.amphibiansResponse
+                amphibiansResponse = amphibianUiState.amphibiansResponse,
             ) { name ->
                 navHostController.navigateSingleTopTo(DataSource.AmphibianScreen.AmphibianDetail.name + "/$name")
             }

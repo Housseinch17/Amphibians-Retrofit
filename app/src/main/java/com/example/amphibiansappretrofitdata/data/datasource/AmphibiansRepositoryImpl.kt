@@ -19,7 +19,10 @@ class AmphibiansRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateAmphibians(): List<AmphibiansItem> {
-        val amphibiansList = getAmphibiansFromApi()
+        val amphibiansList: List<AmphibiansItem> = getAmphibiansFromApi()
+        if(amphibiansList.isEmpty()){
+            return getAmphibiansFromDb()
+        }
         localAmphibiansImpl.deleteAllAmphibians()
         localAmphibiansImpl.saveAmphibians(amphibiansList)
         return amphibiansList
