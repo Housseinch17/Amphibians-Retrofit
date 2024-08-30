@@ -8,7 +8,10 @@ import com.example.amphibiansappretrofitdata.data.uistate.AmphibiansUiState
 import com.example.amphibiansappretrofitdata.domain.usecase.GetAmphibiansUseCase
 import com.example.amphibiansappretrofitdata.domain.usecase.UpdateAmphibiansUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,23 +24,38 @@ class AmphibiansViewModel @Inject constructor(
 ) : ViewModel() {
     private val _amphibians = MutableStateFlow(AmphibiansUiState())
     val amphibians = _amphibians.asStateFlow()
+    private val _updatedSharedFlow: MutableSharedFlow<String> = MutableSharedFlow()
+    val updatedSharedFlow: SharedFlow<String> = _updatedSharedFlow.asSharedFlow()
+
+    private fun updateSharedFlow(message: String) {
+        viewModelScope.launch {
+            _updatedSharedFlow.emit(message)
+        }
+    }
 
     init {
-        Log.d("MyTag","Amphibians started")
+        Log.d("MyTag", "Amphibians started")
         getAmphibians()
     }
 
     override fun onCleared() {
         super.onCleared()
-        Log.d("MyTag","Amphibians cleared")
+        Log.d("MyTag", "Amphibians cleared")
     }
 
     fun updateAmphibians() {
         viewModelScope.launch {
+            val amphibianList = fetchAmphibians { updateAmphibiansUseCase.updateAmphibians() }
             _amphibians.update {
                 it.copy(
-                    amphibiansResponse = fetchAmphibians { updateAmphibiansUseCase.updateAmphibians() }
+                    amphibiansResponse = amphibianList
                 )
+            }
+            Log.d("MyTag","1 $amphibianList")
+            if(amphibianList !is AmphibiansResponse.Error)
+                updateSharedFlow("Amphibians list is updated!")
+            else{
+                updateSharedFlow("Error check your internet!")
             }
         }
     }

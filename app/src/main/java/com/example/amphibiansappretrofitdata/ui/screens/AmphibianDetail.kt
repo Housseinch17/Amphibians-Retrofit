@@ -1,8 +1,10 @@
 package com.example.amphibiansappretrofitdata.ui.screens
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.NonSkippableComposable
 import androidx.compose.ui.Modifier
 import com.example.amphibiansappretrofitdata.data.model.AmphibiansItem
+
 
 @Composable
 fun AmphibianDetail(

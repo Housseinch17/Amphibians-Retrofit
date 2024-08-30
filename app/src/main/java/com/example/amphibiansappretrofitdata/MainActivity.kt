@@ -1,6 +1,7 @@
 package com.example.amphibiansappretrofitdata
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -67,6 +69,12 @@ class MainActivity : ComponentActivity() {
                     else -> DataSource.AmphibianScreen.Amphibians
                 }
                 val amphibiansViewModel = hiltViewModel<AmphibiansViewModel>()
+
+                LaunchedEffect(amphibiansViewModel.updatedSharedFlow) {
+                    amphibiansViewModel.updatedSharedFlow.collect{message ->
+                        Toast.makeText(applicationContext,message,Toast.LENGTH_LONG).show()
+                    }
+                }
 
                 Scaffold(topBar = {
                     AppBar(
